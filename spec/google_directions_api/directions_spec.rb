@@ -29,4 +29,10 @@ describe GoogleDirectionsAPI::Directions do
       expect(subject.duration).to eq(185)
     end
   end
+
+  describe '#polyline' do
+    it 'returns a polyline for the whole trip' do
+      expect(subject.polyline).to match /^ip.+/
+    end
+  end
 end

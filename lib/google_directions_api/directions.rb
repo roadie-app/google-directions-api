@@ -22,6 +22,10 @@ module GoogleDirectionsAPI
       seconds / 60
     end
 
+    def polyline
+      data["routes"][0]["overview_polyline"]["points"]
+    end
+
     private
 
     def response
