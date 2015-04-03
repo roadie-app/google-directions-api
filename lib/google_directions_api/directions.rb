@@ -1,8 +1,7 @@
-require 'faraday'
-require 'json'
+require_relative './base'
 
 module GoogleDirectionsAPI
-  class Directions
+  class Directions < Base
     attr_accessor :to
     attr_accessor :from
 
@@ -21,8 +20,9 @@ module GoogleDirectionsAPI
     private
 
     def response
-      conn = Faraday.new(url: 'https://maps.googleapis.com')
-      @response ||= conn.get "/maps/api/directions/json?origin=#{from}&destination=#{to}&key=#{ENV['GOOGLE_API_KEY']}"
+      @response ||= get "/maps/api/directions/json",
+                      origin: from,
+                      destination: to
     end
 
     def data
