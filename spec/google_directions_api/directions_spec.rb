@@ -23,4 +23,10 @@ describe GoogleDirectionsAPI::Directions do
       expect(subject.distance).to eq(214.372995)
     end
   end
+
+  describe '#duration' do
+    it 'returns the time in minutes' do
+      expect(subject.duration).to eq(185)
+    end
+  end
 end

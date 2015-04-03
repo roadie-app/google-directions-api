@@ -17,6 +17,11 @@ module GoogleDirectionsAPI
       (meters / 1000) * 0.621371
     end
 
+    def duration
+      seconds = data["routes"][0]["legs"][0]["duration"]["value"]
+      seconds / 60
+    end
+
     private
 
     def response
