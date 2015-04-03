@@ -20,7 +20,17 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Set your Google API Key as the environment variable `GOOGLE_API_KEY`.
+
+To get directions
+
+```ruby
+direction = GoogleDirectionsAPI::Directions.new_for_locations(from: '123 Fake St., Atlanta, GA', to: '345 Main St., Atlanta, GA')
+
+directions.distance
+directions.duration
+directions.polyline
+```
 
 ## Development
 
