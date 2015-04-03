@@ -1,5 +1,5 @@
 require "google_directions_api/version"
+require "google_directions_api/directions"
 
-module GoogleDirectionsApi
-  # Your code goes here...
+module GoogleDirectionsAPI
 end
