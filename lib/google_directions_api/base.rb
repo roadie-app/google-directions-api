@@ -7,10 +7,7 @@ module GoogleDirectionsAPI
 
     def get(path, params)
       params.merge!({ key: key })
-      params_string = params.map do |k,v|
-                        "#{k.to_s}=#{v.to_s}"
-                      end.join('&')
-      conn.get "#{path}?#{params_string}"
+      conn.get path, params
     end
 
     private
