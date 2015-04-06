@@ -35,4 +35,13 @@ describe GoogleDirectionsAPI::Directions do
       expect(subject.polyline).to match /^ip.+/
     end
   end
+
+  describe 'directions not found' do
+    it 'throws an error if directions are not found' do
+      bad_directions = described_class.new_for_locations(from: "0,0", to: "0,0")
+      VCR.use_cassette 'bad directions' do
+        expect{bad_directions.duration}.to raise_error
+      end
+    end
+  end
 end
