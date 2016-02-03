@@ -14,7 +14,7 @@ module GoogleDirectionsAPI
 
     def distance
       meters = data["routes"][0]["legs"][0]["distance"]["value"]
-      (meters / 1000) * 0.621371
+      meters * 0.000621371
     end
 
     def duration

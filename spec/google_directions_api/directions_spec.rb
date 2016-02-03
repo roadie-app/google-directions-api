@@ -20,7 +20,7 @@ describe GoogleDirectionsAPI::Directions do
 
   describe '#distance' do
     it 'returns distance in miles' do
-      expect(subject.distance).to eq(214.372995)
+      expect(subject.distance).to eq(214.423326051)
     end
   end
 
@@ -40,8 +40,30 @@ describe GoogleDirectionsAPI::Directions do
     it 'throws an error if directions are not found' do
       bad_directions = described_class.new_for_locations(from: "0,0", to: "0,0")
       VCR.use_cassette 'bad directions' do
-        expect{bad_directions.duration}.to raise_error
+        expect{bad_directions.duration}.to raise_error(GoogleDirectionsAPI::ClientError)
       end
     end
+  end
+
+  context 'when the trip is less than a mile' do
+    let(:origin) { '34.1214038,-84.2063174' }
+    let(:destination) { '34.1183516,-84.203811' }
+
+    subject do
+      VCR.use_cassette 'less than a mile' do
+        GoogleDirectionsAPI::Directions.new_for_locations(from: origin, to: destination).tap do |d|
+          d.distance
+        end
+      end
+    end
+
+    it 'returns the correct distance' do
+      expect(subject.distance).to eq(0.278374208)
+    end
+
+    it 'returns the correct time' do
+      expect(subject.duration).to eq(1)
+    end
+
   end
 end
