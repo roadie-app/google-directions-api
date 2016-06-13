@@ -11,7 +11,6 @@ module GoogleDirectionsAPI
       conn.get(path, params).tap do |response|
         logger.send(log_level, "Url: #{response.env["url"].to_s}")
         logger.send(log_level, "Status: #{response.env["status"].to_s}")
-        logger.send(log_level, "Body: #{response.body}")
         status = JSON.parse(response.body)["status"]
         raise ClientError.new(status: status) unless status == "OK"
       end
