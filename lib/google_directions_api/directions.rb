@@ -27,7 +27,7 @@ module GoogleDirectionsAPI
     end
 
     def has_tolls?
-      data["routes"][0]["legs"][0]["steps"].any? { |x| x.html_instructions.try(:downcase).try(:include?, 'toll road') }
+      data["routes"][0]["legs"][0]["steps"].any? { |x| x.["html_instructions"].try(:downcase).try(:include?, 'toll road') }
     end
 
     private
