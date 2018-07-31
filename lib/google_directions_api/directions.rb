@@ -1,14 +1,17 @@
 require_relative './base'
+require_relative './polyline/encoder'
 
 module GoogleDirectionsAPI
   class Directions < Base
     attr_accessor :to
     attr_accessor :from
+    attr_accessor :waypoints
 
-    def self.new_for_locations(from:, to:)
+    def self.new_for_locations(from:, to:, waypoints: nil)
       new.tap do |d|
         d.to = to
         d.from = from
+        d.waypoints = waypoints
       end
     end
 
@@ -33,9 +36,20 @@ module GoogleDirectionsAPI
     private
 
     def response
-      @response ||= get "/maps/api/directions/json",
-                      origin: from,
-                      destination: to
+      @response ||= get "/maps/api/directions/json", request_params
+    end
+
+    def request_params
+      {
+          origin: from,
+          destination: to,
+          waypoints: encode_waypoints
+      }.keep_if { |k,v| v.present? }
+    end
+
+    def encode_waypoints
+      return unless waypoints.present?
+      "enc:#{GoogleDirectionsAPI::Polyline::Encoder.encode(waypoints)}:"
     end
 
     def data
