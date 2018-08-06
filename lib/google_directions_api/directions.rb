@@ -42,11 +42,11 @@ module GoogleDirectionsAPI
           origin: from,
           destination: to,
           waypoints: encode_waypoints
-      }.keep_if { |k,v| !v.empty? }
+      }.keep_if { |k,v| !v.nil? && !v.empty? }
     end
 
     def encode_waypoints
-      return if waypoints.empty?
+      return unless waypoints_present?
       "enc:#{GoogleDirectionsAPI::Polyline::Encoder.encode(waypoints)}:"
     end
 
@@ -55,33 +55,31 @@ module GoogleDirectionsAPI
     end
 
     def total_distance
-      if waypoints.empty?
-        data["routes"][0]["legs"][0]["distance"]["value"]
-      else
+      if waypoints_present?
         meters = 0
         data["routes"][0]["legs"].each do |leg|
           meters += leg["distance"]["value"]
         end
         return meters
+      else
+        data["routes"][0]["legs"][0]["distance"]["value"]
       end
     end
 
     def total_duration
-      if waypoints.empty?
-        data["routes"][0]["legs"][0]["duration"]["value"]
-      else
+      if waypoints_present?
         seconds = 0
         data["routes"][0]["legs"].each do |leg|
           seconds += leg["duration"]["value"]
         end
         return seconds
+      else
+        data["routes"][0]["legs"][0]["duration"]["value"]
       end
     end
 
     def tolls_along_route?
-      if waypoints.empty?
-        data["routes"][0]["legs"][0]["steps"].any? { |x| x["html_instructions"].try(:downcase).try(:include?, 'toll road') }
-      else
+      if waypoints_present?
         data["routes"][0]["legs"].each do |leg|
           next unless leg["steps"].any?
 
@@ -91,7 +89,15 @@ module GoogleDirectionsAPI
         end
 
         return false
+      else
+        data["routes"][0]["legs"][0]["steps"].any? { |x| x["html_instructions"].try(:downcase).try(:include?, 'toll road') }
       end
+    end
+
+    def waypoints_present?
+      return false if waypoints.nil? || waypoints.empty?
+
+      return true
     end
   end
 end
