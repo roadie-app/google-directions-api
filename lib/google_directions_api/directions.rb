@@ -83,7 +83,7 @@ module GoogleDirectionsAPI
         data["routes"][0]["legs"].each do |leg|
           next unless leg["steps"].any?
 
-          if leg["steps"]["html_instructions"].try(:downcase).try(:include?, 'toll road')
+          if leg["steps"].any? { |x| x["html_instructions"].try(:downcase).try(:include?, 'toll road') }
             return true
           end
         end
