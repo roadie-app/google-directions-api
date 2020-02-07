@@ -55,43 +55,31 @@ module GoogleDirectionsAPI
     end
 
     def total_distance
-      if waypoints_present?
-        meters = 0
-        data["routes"][0]["legs"].each do |leg|
-          meters += leg["distance"]["value"]
-        end
-        return meters
-      else
-        data["routes"][0]["legs"][0]["distance"]["value"]
+      meters = 0
+      data["routes"][0]["legs"].each do |leg|
+        meters += leg["distance"]["value"]
       end
+
+      meters
     end
 
     def total_duration
-      if waypoints_present?
-        seconds = 0
-        data["routes"][0]["legs"].each do |leg|
-          seconds += leg["duration"]["value"]
-        end
-        return seconds
-      else
-        data["routes"][0]["legs"][0]["duration"]["value"]
+      seconds = 0
+      data["routes"][0]["legs"].each do |leg|
+        seconds += leg["duration"]["value"]
       end
+
+      seconds
     end
 
     def tolls_along_route?
-      if waypoints_present?
-        data["routes"][0]["legs"].each do |leg|
-          next unless leg["steps"].any?
-
-          if leg["steps"].any? { |x| x["html_instructions"].try(:downcase).try(:include?, 'toll road') }
-            return true
-          end
+      data["routes"][0]["legs"].each do |leg|
+        if leg["steps"].any? { |x| x["html_instructions"].try(:downcase).try(:include?, 'toll road') }
+          return true
         end
-
-        return false
-      else
-        data["routes"][0]["legs"][0]["steps"].any? { |x| x["html_instructions"].try(:downcase).try(:include?, 'toll road') }
       end
+
+      false
     end
 
     def waypoints_present?
