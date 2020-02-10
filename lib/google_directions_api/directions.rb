@@ -39,9 +39,9 @@ module GoogleDirectionsAPI
 
     def request_params
       {
-          origin: from,
-          destination: to,
-          waypoints: encode_waypoints
+        origin: from,
+        destination: to,
+        waypoints: encode_waypoints
       }.keep_if { |k,v| !v.nil? && !v.empty? }
     end
 
@@ -55,21 +55,15 @@ module GoogleDirectionsAPI
     end
 
     def total_distance
-      meters = 0
-      data["routes"][0]["legs"].each do |leg|
-        meters += leg["distance"]["value"]
+      data["routes"][0]["legs"].inject(0) do |meters, leg|
+        meters + leg["distance"]["value"]
       end
-
-      meters
     end
 
     def total_duration
-      seconds = 0
-      data["routes"][0]["legs"].each do |leg|
-        seconds += leg["duration"]["value"]
+      data["routes"][0]["legs"].inject(0) do |seconds, leg|
+        seconds + leg["duration"]["value"]
       end
-
-      seconds
     end
 
     def tolls_along_route?
