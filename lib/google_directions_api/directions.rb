@@ -3,15 +3,14 @@ require_relative './polyline/encoder'
 
 module GoogleDirectionsAPI
   class Directions < Base
-    attr_accessor :to
-    attr_accessor :from
-    attr_accessor :waypoints
+    attr_accessor :from, :to, :waypoints, :departure_time
 
-    def self.new_for_locations(from:, to:, waypoints: nil)
+    def self.new_for_locations(from:, to:, waypoints: nil, departure_time: nil)
       new.tap do |d|
         d.to = to
         d.from = from
         d.waypoints = waypoints
+        d.departure_time = departure_time
       end
     end
 
@@ -41,7 +40,8 @@ module GoogleDirectionsAPI
       {
         origin: from,
         destination: to,
-        waypoints: encode_waypoints
+        waypoints: encode_waypoints,
+        departure_time: departure_time
       }.keep_if { |k,v| !v.nil? && !v.empty? }
     end
 
@@ -63,6 +63,14 @@ module GoogleDirectionsAPI
     def total_duration
       data["routes"][0]["legs"].inject(0) do |seconds, leg|
         seconds + leg["duration"]["value"]
+      end
+    end
+
+    def duration_in_traffic # TODO: verify
+      return nil unless departure_time.present?
+
+      data["routes"][0]["legs"].inject(0) do |seconds, leg|
+        seconds + leg["duration_in_traffic"]["value"]
       end
     end
 
