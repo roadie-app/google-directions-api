@@ -26,6 +26,10 @@ module GoogleDirectionsAPI
       total_duration / 60
     end
 
+    def duration_in_traffic
+      total_duration_in_traffic / 60
+    end
+
     def has_tolls?
       tolls_along_route?
     end
@@ -66,7 +70,7 @@ module GoogleDirectionsAPI
       end
     end
 
-    def duration_in_traffic # TODO: verify
+    def total_duration_in_traffic # TODO: verify
       return nil unless departure_time.present?
 
       data["routes"][0]["legs"].inject(0) do |seconds, leg|
