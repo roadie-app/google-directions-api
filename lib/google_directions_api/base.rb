@@ -19,11 +19,15 @@ module GoogleDirectionsAPI
     private
 
     def conn
-      @conn ||= Faraday.new(url: 'https://maps.googleapis.com')
+      @conn ||= Faraday.new(url: url)
     end
 
     def key
       ENV['GOOGLE_API_KEY']
+    end
+
+    def url
+      GoogleDirectionsAPI.configuration.url
     end
 
     def logger
