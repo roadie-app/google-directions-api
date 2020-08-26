@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["aubrey.c.rhodes@gmail.com"]
 
   spec.summary       = %q{Ruby wrapper for the Google Directions API}
-  spec.homepage      = "https://github.com/aubreyrhodes/google-directions-api"
+  spec.homepage      = "https://github.com/roadie-app/google-directions-api"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
