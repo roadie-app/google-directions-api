@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'google_directions_api/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "google_directions_api"
+  spec.name          = "google-directions-api"
   spec.version       = GoogleDirectionsAPI::VERSION
   spec.authors       = ["Aubrey Rhodes"]
   spec.email         = ["aubrey.c.rhodes@gmail.com"]
