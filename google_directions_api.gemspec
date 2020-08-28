@@ -4,13 +4,13 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'google_directions_api/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "google_directions_api"
+  spec.name          = "google-directions-api"
   spec.version       = GoogleDirectionsAPI::VERSION
   spec.authors       = ["Aubrey Rhodes"]
   spec.email         = ["aubrey.c.rhodes@gmail.com"]
 
   spec.summary       = %q{Ruby wrapper for the Google Directions API}
-  spec.homepage      = "https://github.com/aubreyrhodes/google-directions-api"
+  spec.homepage      = "https://github.com/roadie-app/google-directions-api"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
