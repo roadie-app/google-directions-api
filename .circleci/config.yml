@@ -60,7 +60,6 @@ jobs:
           - POSTGRES_DB=roadie_circleci
           - POSTGRES_USER=postgres
           - POSTGRES_PASSWORD=password
-          - GOOGLE_API_KEY=AIzaSyCFyr4ntyYpAB3sTmhICVMUi6dnuSoEgXA
     steps:
       - *restore-workspace
       - *restore-gem-cache
@@ -81,6 +80,7 @@ jobs:
           name: Run RSpec
           environment:
             TEST_DATABASE_URL: "postgres://postgres@localhost:5432/roadie_circleci"
+            GOOGLE_API_KEY: AIzaSyCFyr4ntyYpAB3sTmhICVMUi6dnuSoEgXA
           command: >
             bundle exec rspec --format progress
       - save_cache:
