@@ -18,8 +18,8 @@ bundle-check-or-install: &bundle-check-or-install
       sudo gem update --system
       echo 'export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d " ")' >> $BASH_ENV
       source $BASH_ENV
-      gem install bundler -v 1.9.9
-      bundle _1.9.9_ check --path=vendor/bundle || bundle _1.9.9_ install --path=vendor/bundle --jobs=4 --retry=3
+      gem install bundler -v 1.9.1
+      bundle _1.9.1_ check --path=vendor/bundle || bundle _1.9.1_ install --path=vendor/bundle --jobs=4 --retry=3
 
 save-gem-cache: &save-gem-cache
   save_cache:
