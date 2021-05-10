@@ -1,13 +1,115 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
-# Use a package of configuration called an orb.
-orbs:
-  # Declare a dependency on the welcome-orb
-  welcome: circleci/welcome-orb@0.4.1
-# Orchestrate or schedule a set of jobs
+
+restore-workspace: &restore-workspace
+  attach_workspace:
+    at: ~/
+
+restore-gem-cache: &restore-gem-cache
+  restore_cache:
+    name: Restore gem cache
+    keys:
+      - v17-gem-cache-{{ checksum "Gemfile.lock" }}
+      - v17-gem-cache
+
+bundle-check-or-install: &bundle-check-or-install
+  run:
+    name: Bundle check or install
+    command: |
+      sudo gem update --system
+      echo 'export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d " ")' >> $BASH_ENV
+      source $BASH_ENV
+      gem install bundler -v 2.1.4
+      bundle _2.1.4_ check --path=vendor/bundle || bundle _2.1.4_ install --path=vendor/bundle --jobs=4 --retry=3
+
+remove-unused-gems: &remove-unused-gems
+  run:
+    name: Remove unused gems
+    command: |
+      bundle clean
+
+save-gem-cache: &save-gem-cache
+  save_cache:
+    name: Save gem cache
+    key: v17-gem-cache-{{ checksum "Gemfile.lock" }}
+    paths:
+      - vendor/bundle
+
+executors:
+  ruby:
+    docker:
+      - image: circleci/ruby:2.7.0-node
+    working_directory: ~/app
+
+jobs:
+  checkout:
+    resource_class: small
+    executor: ruby
+    steps:
+      - checkout
+      - *restore-gem-cache
+      - *bundle-check-or-install
+      - *remove-unused-gems
+      - *save-gem-cache
+      - persist_to_workspace:
+          root: ~/
+          paths: app
+
+  test:
+    resource_class: xlarge
+    working_directory: ~/app
+    docker:
+      - image: circleci/ruby:2.7.0-node
+        environment:
+          - RACK_ENV=test
+          - RAILS_ENV=test
+      - image: postgres:10-alpine
+        environment:
+          - POSTGRES_DB=roadie_circleci
+          - POSTGRES_USER=postgres
+          - POSTGRES_PASSWORD=password
+    steps:
+      - *restore-workspace
+      - *restore-gem-cache
+      - *bundle-check-or-install
+      - run:
+          name: Wait for PostgreSQL
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run:
+          name: Prepare database
+          environment:
+            TEST_DATABASE_URL: "postgres://postgres@localhost:5432/roadie_circleci"
+          command: |
+            bundle exec rails db:setup RAILS_ENV=test
+      - run:
+          name: Create test results directory
+          command: |
+            mkdir -p tmp/test-results
+      - restore_cache:
+          name: Restore runtime cache
+          keys:
+            - v17-runtime-cache-{{ .Branch }}
+            - v17-runtime-cache-master
+      - run:
+          name: Run RSpec
+          environment:
+            TEST_DATABASE_URL: "postgres://postgres@localhost:5432/roadie_circleci"
+          command: >
+            bundle exec rspec --format progress --format RspecJunitFormatter -o tmp/test-results/rspec.xml
+      - save_cache:
+          name: Save runtime cache
+          key: v17-runtime-cache-{{ .Branch }}-{{ epoch }}
+          paths:
+            - tmp/runtime_rspec.log
+      - store_test_results:
+          name: Store test results
+          path: tmp/test-results
+          destination: test-results
+
 workflows:
-  # Name the workflow "welcome"
-  welcome:
-    # Run the welcome/run job in its own container
+  version: 2
+  commit-workflow:
     jobs:
-      - welcome/run
+      - checkout
+      - test:
+          requires:
+            - checkout
