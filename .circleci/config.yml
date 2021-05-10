@@ -81,7 +81,7 @@ jobs:
           environment:
             TEST_DATABASE_URL: "postgres://postgres@localhost:5432/roadie_circleci"
           command: >
-            bundle exec rspec --format progress -o tmp/test-results/rspec.xml
+            bundle exec rspec --format progress
       - save_cache:
           name: Save runtime cache
           key: v17-runtime-cache-{{ .Branch }}-{{ epoch }}
