@@ -18,8 +18,8 @@ bundle-check-or-install: &bundle-check-or-install
       sudo gem update --system
       echo 'export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d " ")' >> $BASH_ENV
       source $BASH_ENV
-      gem install bundler -v 1.9.1
-      bundle _1.9.1_ check --path=vendor/bundle || bundle _1.9.1_ install --path=vendor/bundle --jobs=4 --retry=3
+      gem install bundler -v 2.1.4
+      bundle _2.1.4_ check --path=vendor/bundle || bundle _2.1.4_ install --path=vendor/bundle --jobs=4 --retry=3
 
 save-gem-cache: &save-gem-cache
   save_cache:
@@ -80,8 +80,9 @@ jobs:
           name: Run RSpec
           environment:
             TEST_DATABASE_URL: "postgres://postgres@localhost:5432/roadie_circleci"
+            GOOGLE_API_KEY: AIzaSyCFyr4ntyYpAB3sTmhICVMUi6dnuSoEgXA
           command: >
-            bundle exec rspec --format progress --format RspecJunitFormatter -o tmp/test-results/rspec.xml
+            bundle exec rspec --format progress
       - save_cache:
           name: Save runtime cache
           key: v17-runtime-cache-{{ .Branch }}-{{ epoch }}
