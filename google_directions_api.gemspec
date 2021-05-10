@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
 
-  spec.add_development_dependency "bundler", "~> 1.9"
+  spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.2.0"
   spec.add_development_dependency "vcr", "~> 2.9.3"
@@ -27,5 +27,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "dotenv", "~> 2.0.1"
   spec.add_development_dependency "pry", "~> 0.10.1"
 
-  spec.add_runtime_dependency "faraday", "~> 0.9.1"
+  spec.add_runtime_dependency "faraday"
 end
