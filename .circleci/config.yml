@@ -19,7 +19,7 @@ bundle-check-or-install: &bundle-check-or-install
       echo 'export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d " ")' >> $BASH_ENV
       source $BASH_ENV
       gem install bundler -v 1.9.9
-      bundle _2.1.4_ check --path=vendor/bundle || bundle _2.1.4_ install --path=vendor/bundle --jobs=4 --retry=3
+      bundle _1.9.9_ check --path=vendor/bundle || bundle _1.9.9_ install --path=vendor/bundle --jobs=4 --retry=3
 
 remove-unused-gems: &remove-unused-gems
   run:
