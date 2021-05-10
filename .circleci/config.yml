@@ -42,7 +42,6 @@ jobs:
       - checkout
       - *restore-gem-cache
       - *bundle-check-or-install
-      - *remove-unused-gems
       - *save-gem-cache
       - persist_to_workspace:
           root: ~/
