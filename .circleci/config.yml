@@ -21,12 +21,6 @@ bundle-check-or-install: &bundle-check-or-install
       gem install bundler -v 1.9.9
       bundle _1.9.9_ check --path=vendor/bundle || bundle _1.9.9_ install --path=vendor/bundle --jobs=4 --retry=3
 
-remove-unused-gems: &remove-unused-gems
-  run:
-    name: Remove unused gems
-    command: |
-      bundle clean
-
 save-gem-cache: &save-gem-cache
   save_cache:
     name: Save gem cache
