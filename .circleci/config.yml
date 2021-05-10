@@ -60,6 +60,7 @@ jobs:
           - POSTGRES_DB=roadie_circleci
           - POSTGRES_USER=postgres
           - POSTGRES_PASSWORD=password
+          - GOOGLE_API_KEY=AIzaSyCFyr4ntyYpAB3sTmhICVMUi6dnuSoEgX
     steps:
       - *restore-workspace
       - *restore-gem-cache
